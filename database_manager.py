@@ -7,16 +7,19 @@ def get_database_path():
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     return os.path.join(BASE_DIR, 'credentials.db')
 
+# Gets saved user profile
 def get_user_identity():
     query = 'SELECT * FROM Identification LIMIT 1'
     rows = execute_query(query)
     return rows[0] if rows else None
 
+# Checks if entered pass hash is the same as saved master hash
 def is_verified(entered_pass, user_info):
     hashed_master_pass = user_info[1]
     hashed_entered_pass = get_hashed_key(entered_pass, user_info[2])
     return hashed_master_pass == hashed_entered_pass
 
+# Executes a query into the database
 def execute_query(query, values = None):
     try:
         db_path = get_database_path()
@@ -31,7 +34,8 @@ def execute_query(query, values = None):
             return cur.fetchall()
     except sqlite3.Error as error:
         print(error)
-    
+
+# Saves user portfolio into the database
 def save_portfolio(name, master_pass):
     salt = generate_salt()
     hashed_pass = get_hashed_key(master_pass, salt)
@@ -50,6 +54,7 @@ def find_credential(website):
     else:
         print('No matching website was found.')
 
+# Inserts a credential into the databse
 def save_credential(website, username, password):
     encrypted_pass, key = encrypt_text(password)
     query = 'INSERT INTO Credentials (website, username, password, keycode) VALUES (?, ?, ?, ?);'
@@ -59,6 +64,7 @@ def save_credential(website, username, password):
     print('\nNew login details created.')
     display_credential(website, username, password)
 
+# Lists all saved credentials
 def list_credential():
     query = 'SELECT * FROM Credentials ORDER BY website;'
     rows = execute_query(query)

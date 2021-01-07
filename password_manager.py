@@ -6,6 +6,7 @@ def main():
     print('\n Password Manager\n ver. 1.1')
     print('_' * 18)
 
+    # Checks master password
     user_info = get_user_identity()
     if user_info:
         entered_pass = input('\nEnter the master password: ')
@@ -18,6 +19,14 @@ def main():
     else:
         setup_login()
         input('\nPress enter to continue: ')
+
+    # Menu loop
+    # [1] - Retrieve a password
+    # [2] - Create new login credentials
+    # [3] - Delete a password
+    # [4] - List all login credentials
+    # [5] - Find sites connected to an email
+    # [x] - Exit
 
     while True:
         option = menu()
